@@ -6,7 +6,7 @@
  */
 
 // 显示帮助信息
-function showHelp() {
+function showHelp(): void {
   console.log(`
 文件操作工具
 
@@ -26,11 +26,17 @@ function showHelp() {
   rmdir <目录路径>          - 删除目录
   size <文件路径>           - 获取文件大小
   help                     - 显示帮助信息
+
+示例:
+  bun run file read ./example.txt           # 读取文件内容
+  bun run file write ./output.txt "Hello"   # 写入内容到文件
+  bun run file copy ./source.txt ./dest.txt # 复制文件
+  bun run file list ./directory              # 列出目录内容
 `);
 }
 
 // 读取文件内容
-async function readFile(filePath) {
+async function readFile(filePath: string): Promise<void> {
   try {
     const file = Bun.file(filePath);
     const exists = await file.exists();
@@ -43,24 +49,24 @@ async function readFile(filePath) {
     const content = await file.text();
     console.log(content);
   } catch (error) {
-    console.error(`读取文件失败: ${error.message}`);
+    console.error(`读取文件失败: ${(error as Error).message}`);
     process.exit(1);
   }
 }
 
 // 写入文件内容
-async function writeFile(filePath, content) {
+async function writeFile(filePath: string, content: string): Promise<void> {
   try {
     await Bun.write(filePath, content);
     console.log(`成功写入文件: ${filePath}`);
   } catch (error) {
-    console.error(`写入文件失败: ${error.message}`);
+    console.error(`写入文件失败: ${(error as Error).message}`);
     process.exit(1);
   }
 }
 
 // 追加内容到文件
-async function appendFile(filePath, content) {
+async function appendFile(filePath: string, content: string): Promise<void> {
   try {
     const file = Bun.file(filePath);
     const exists = await file.exists();
@@ -74,13 +80,13 @@ async function appendFile(filePath, content) {
 
     console.log(`成功追加内容到文件: ${filePath}`);
   } catch (error) {
-    console.error(`追加内容失败: ${error.message}`);
+    console.error(`追加内容失败: ${(error as Error).message}`);
     process.exit(1);
   }
 }
 
 // 复制文件
-async function copyFile(sourcePath, destPath) {
+async function copyFile(sourcePath: string, destPath: string): Promise<void> {
   try {
     const sourceFile = Bun.file(sourcePath);
     const exists = await sourceFile.exists();
@@ -93,13 +99,13 @@ async function copyFile(sourcePath, destPath) {
     await Bun.write(destPath, sourceFile);
     console.log(`成功复制文件: ${sourcePath} -> ${destPath}`);
   } catch (error) {
-    console.error(`复制文件失败: ${error.message}`);
+    console.error(`复制文件失败: ${(error as Error).message}`);
     process.exit(1);
   }
 }
 
 // 移动/重命名文件
-async function moveFile(sourcePath, destPath) {
+async function moveFile(sourcePath: string, destPath: string): Promise<void> {
   try {
     const sourceFile = Bun.file(sourcePath);
     const exists = await sourceFile.exists();
@@ -113,36 +119,36 @@ async function moveFile(sourcePath, destPath) {
     await removeFileOrDirectory(sourcePath);
     console.log(`成功移动文件: ${sourcePath} -> ${destPath}`);
   } catch (error) {
-    console.error(`移动文件失败: ${error.message}`);
+    console.error(`移动文件失败: ${(error as Error).message}`);
     process.exit(1);
   }
 }
 
 // 删除文件
-async function deleteFile(filePath) {
+async function deleteFile(filePath: string): Promise<void> {
   try {
     await removeFileOrDirectory(filePath);
     console.log(`成功删除文件: ${filePath}`);
   } catch (error) {
-    console.error(`删除文件失败: ${error.message}`);
+    console.error(`删除文件失败: ${(error as Error).message}`);
     process.exit(1);
   }
 }
 
 // 检查文件是否存在
-async function checkFileExists(filePath) {
+async function checkFileExists(filePath: string): Promise<void> {
   try {
     const file = Bun.file(filePath);
     const exists = await file.exists();
     console.log(exists ? `文件存在: ${filePath}` : `文件不存在: ${filePath}`);
   } catch (error) {
-    console.error(`检查文件失败: ${error.message}`);
+    console.error(`检查文件失败: ${(error as Error).message}`);
     process.exit(1);
   }
 }
 
 // 列出目录内容
-async function listDirectory(dirPath) {
+async function listDirectory(dirPath: string): Promise<void> {
   try {
     const files = await Array.fromAsync(Bun.glob(`${dirPath}/*`));
 
@@ -160,35 +166,35 @@ async function listDirectory(dirPath) {
       console.log(`${isDir ? '[DIR]' : '[FILE]'} ${file} (${size})`);
     }
   } catch (error) {
-    console.error(`列出目录失败: ${error.message}`);
+    console.error(`列出目录失败: ${(error as Error).message}`);
     process.exit(1);
   }
 }
 
 // 创建目录
-async function createDirectory(dirPath) {
+async function createDirectory(dirPath: string): Promise<void> {
   try {
     await Bun.$`mkdir -p ${dirPath}`;
     console.log(`成功创建目录: ${dirPath}`);
   } catch (error) {
-    console.error(`创建目录失败: ${error.message}`);
+    console.error(`创建目录失败: ${(error as Error).message}`);
     process.exit(1);
   }
 }
 
 // 删除目录
-async function removeDirectory(dirPath) {
+async function removeDirectory(dirPath: string): Promise<void> {
   try {
     await removeFileOrDirectory(dirPath);
     console.log(`成功删除目录: ${dirPath}`);
   } catch (error) {
-    console.error(`删除目录失败: ${error.message}`);
+    console.error(`删除目录失败: ${(error as Error).message}`);
     process.exit(1);
   }
 }
 
 // 获取文件大小
-async function getFileSize(filePath) {
+async function getFileSize(filePath: string): Promise<void> {
   try {
     const file = Bun.file(filePath);
     const exists = await file.exists();
@@ -202,13 +208,13 @@ async function getFileSize(filePath) {
     const size = formatFileSize(stats.size);
     console.log(`文件大小: ${filePath} - ${size}`);
   } catch (error) {
-    console.error(`获取文件大小失败: ${error.message}`);
+    console.error(`获取文件大小失败: ${(error as Error).message}`);
     process.exit(1);
   }
 }
 
 // 格式化文件大小
-function formatFileSize(bytes) {
+function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 Bytes';
 
   const k = 1024;
@@ -219,17 +225,17 @@ function formatFileSize(bytes) {
 }
 
 // 删除文件或目录（递归）
-async function removeFileOrDirectory(path) {
+async function removeFileOrDirectory(path: string): Promise<void> {
   try {
     await Bun.$`rm -rf ${path}`;
   } catch (error) {
-    console.error(`删除失败: ${error.message}`);
+    console.error(`删除失败: ${(error as Error).message}`);
     throw error;
   }
 }
 
 // 主函数
-async function main() {
+async function main(): Promise<void> {
   const args = process.argv.slice(2);
 
   if (args.length === 0 || args[0] === 'help') {
