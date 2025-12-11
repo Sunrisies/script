@@ -1,0 +1,22 @@
+{
+  "name": "bun-scripts",
+  "version": "1.0.0",
+  "description": "A collection of useful Bun.js scripts without third-party dependencies",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "file": "bun scripts/file.js",
+    "network": "bun scripts/network.js",
+    "data": "bun scripts/data.js",
+    "system": "bun scripts/system.js",
+    "datetime": "bun scripts/datetime.js"
+  },
+  "keywords": [
+    "bun",
+    "script",
+    "utility",
+    "cli"
+  ],
+  "author": "",
+  "license": "MIT"
+}
